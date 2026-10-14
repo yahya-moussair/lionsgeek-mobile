@@ -146,7 +146,7 @@ export default function EducationCard({
                     ) : null}
                     {description ? (
                       <Text
-                        className="text-sm text-black/55 dark:text-dark_gray5 mt-1.5 leading-[20px]"
+                        className="text-sm text-beta dark:text-white mt-1.5 leading-[20px]"
                         numberOfLines={3}
                       >
                         {description}

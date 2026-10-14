@@ -232,7 +232,7 @@ export default function ExperienceCard({ profile, isDark, isOwnProfile, token, o
                     {/* Description + see more/less */}
                     {displayedDesc ? (
                       <View className="mt-2 pl-3 border-l-2 border-alpha/30">
-                        <Text className="text-[13px] text-black/55 dark:text-dark_gray5 leading-[20px]">
+                        <Text className="text-[13px] text-beta dark:text-white leading-[20px]">
                           {displayedDesc}
                         </Text>
                         {isDescTruncatable && (
