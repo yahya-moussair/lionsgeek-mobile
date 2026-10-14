@@ -277,14 +277,10 @@ export default function CreatePost({ onPostPress, onPostCreated }) {
             <Image
               source={{ uri: profileImageUrl }}
               className="w-9 h-9 rounded-full"
-              style={{ borderWidth: 1.5, borderColor: '#ffc801' }}
               defaultSource={require('@/assets/images/icon.png')}
             />
           ) : (
-            <View
-              className="w-9 h-9 rounded-full bg-beta/10 dark:bg-beta/40 items-center justify-center"
-              style={{ borderWidth: 1.5, borderColor: '#ffc801' }}
-            >
+            <View className="w-9 h-9 rounded-full bg-beta/10 dark:bg-beta/40 items-center justify-center">
               <Text className="text-xs font-extrabold text-black/60 dark:text-white/60">
                 {(user?.name || 'U').charAt(0).toUpperCase()}
               </Text>
