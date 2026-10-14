@@ -387,13 +387,26 @@ export default function ProfileScreen() {
     }, [token]);
 
     const loadSavedPosts = useCallback(async () => {
-        if (!token) return;
+        if (!token || !isOwnProfile) {
+            setSavedPosts([]);
+            return;
+        }
 
         setSavedPostsLoading(true);
         try {
-            // Canonical endpoint (implemented in backend): GET /api/mobile/posts/saved
-            const res = await API.getWithAuth('mobile/posts/saved', token);
-            const list = parseSavedPostsFromApiResponse(res);
+            const list = [];
+            let offset = 0;
+            for (let page = 0; page < 50; page += 1) {
+                const res = await API.getWithAuth(
+                    `mobile/posts/saved?offset=${offset}&limit=20`,
+                    token,
+                );
+                const batch = parseSavedPostsFromApiResponse(res);
+                list.push(...batch);
+                const next = res?.data?.next_offset;
+                if (next == null || batch.length === 0) break;
+                offset = Number(next);
+            }
             setSavedPosts(normalizeSavedPostsList(list));
         } catch (err) {
             console.error('[PROFILE] fetch saved posts error:', err);
@@ -401,7 +414,7 @@ export default function ProfileScreen() {
         } finally {
             setSavedPostsLoading(false);
         }
-    }, [token]);
+    }, [token, isOwnProfile]);
 
     // Initial load
     useEffect(() => {
@@ -847,6 +860,13 @@ export default function ProfileScreen() {
                 selectedIndex={selectedSavedPostIndex}
                 insets={insets}
                 isDark={isDark}
+                onUnsave={(post) => {
+                    setSavedPosts((prev) => {
+                        const next = prev.filter((item) => String(item.id) !== String(post.id));
+                        if (next.length === 0) setSelectedSavedPostIndex(-1);
+                        return next;
+                    });
+                }}
             />
         </AppLayout>
     );

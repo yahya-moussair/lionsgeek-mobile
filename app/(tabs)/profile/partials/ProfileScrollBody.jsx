@@ -394,7 +394,7 @@ export default function ProfileScrollBody(props) {
       ) : null} */}
 
       {/* ─── Profile Tabs ─── */}
-      <ProfileTabBar activeTab={activeTab} onTabChange={setActiveTab} isDark={isDark} />
+      <ProfileTabBar activeTab={activeTab} onTabChange={setActiveTab} isDark={isDark} showSaved={isOwnProfile} />
 
       {/* Tab 1 — Posts grid (Instagram-style) */}
       {activeTab === 0 && (
@@ -501,8 +501,8 @@ export default function ProfileScrollBody(props) {
         />
       )}
 
-      {/* Tab 4 — Saved posts */}
-      {activeTab === 3 && (
+      {/* Tab 4 — Saved posts (own profile only) */}
+      {isOwnProfile && activeTab === 3 && (
         <PostsGridTab
           posts={savedPosts}
           postsLoading={savedPostsLoading}
