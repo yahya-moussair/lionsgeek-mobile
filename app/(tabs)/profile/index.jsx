@@ -555,7 +555,8 @@ export default function ProfileScreen() {
             }
         } catch (err) {
             console.error('[PROFILE] avatar upload error:', err);
-            Alert.alert('Error', 'Could not update profile picture. Please try again.');
+            const firstError = Object.values(err?.response?.data?.errors ?? {})?.[0]?.[0];
+            Alert.alert('Error', firstError || 'Could not update profile picture. Please try again.');
         } finally {
             setAvatarUploading(false);
         }
@@ -749,8 +750,13 @@ export default function ProfileScreen() {
                 token={token}
                 isDark={isDark}
                 onClose={() => setShowEditProfile(false)}
-                onSaved={(updated) => {
-                    if (updated) setProfile((prev) => ({ ...prev, ...updated }));
+                onSaved={async (updated) => {
+                    if (!updated) return;
+                    setProfile((prev) => ({ ...prev, ...updated }));
+                    // Keep the logged-in user in sync so the new picture shows on every screen.
+                    if (token && currentUser) {
+                        await saveAuth(token, { ...currentUser, ...updated });
+                    }
                 }}
             />
 

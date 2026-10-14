@@ -708,7 +708,8 @@ export default function EditProfileModal({ visible, profile, token, isDark, onCl
       onClose();
     } catch (err) {
       console.error('[EDIT_PROFILE] save:', err);
-      Alert.alert('Error', 'Could not save changes. Please try again.');
+      const firstError = Object.values(err?.response?.data?.errors ?? {})?.[0]?.[0];
+      Alert.alert('Error', firstError || 'Could not save changes. Please try again.');
     } finally {
       setSaving(false);
     }
