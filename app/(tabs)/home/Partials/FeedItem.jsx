@@ -919,39 +919,28 @@ export default function FeedItem({ item, onPress, initialFocusCommentId = null, 
       {/* ── Header ── */}
       <View className="flex-row items-center px-3 py-3">
         <Pressable onPress={handleOpenProfile} className="flex-row items-center flex-1 active:opacity-80">
-          {/* Avatar with gold ring */}
+          {/* Avatar — no ring */}
           <View
             style={{
               width: 42, height: 42, borderRadius: 21,
-              padding: 2,
-              backgroundColor: '#ffc801',
+              overflow: 'hidden',
               marginRight: 10,
             }}
+            className="bg-beta/10 dark:bg-beta/40"
           >
-            <View
-              style={{
-                flex: 1, borderRadius: 19,
-                backgroundColor: isDark ? '#171717' : '#fafafa',
-                padding: 1.5,
-              }}
-            >
-              {avatarUrl ? (
-                <Image
-                  source={{ uri: avatarUrl }}
-                  defaultSource={require('@/assets/images/icon.png')}
-                  style={{ width: '100%', height: '100%', borderRadius: 18 }}
-                />
-              ) : (
-                <View
-                  style={{ flex: 1, borderRadius: 18, alignItems: 'center', justifyContent: 'center' }}
-                  className="bg-beta/10 dark:bg-beta/40"
-                >
-                  <Text className="text-sm font-extrabold text-black/70 dark:text-white/70">
-                    {displayName.charAt(0).toUpperCase()}
-                  </Text>
-                </View>
-              )}
-            </View>
+            {avatarUrl ? (
+              <Image
+                source={{ uri: avatarUrl }}
+                defaultSource={require('@/assets/images/icon.png')}
+                style={{ width: '100%', height: '100%' }}
+              />
+            ) : (
+              <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+                <Text className="text-sm font-extrabold text-black/70 dark:text-white/70">
+                  {displayName.charAt(0).toUpperCase()}
+                </Text>
+              </View>
+            )}
           </View>
 
           {/* Name + time */}

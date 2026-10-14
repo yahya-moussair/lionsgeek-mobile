@@ -293,11 +293,11 @@ export default function More() {
                   {imageUrl ? (
                     <Image
                       source={{ uri: imageUrl }}
-                      className="h-[88px] w-[88px] rounded-full border-2 border-alpha"
+                      className="h-[88px] w-[88px] rounded-full"
                       defaultSource={require("@/assets/images/icon.png")}
                     />
                   ) : (
-                    <View className="h-[88px] w-[88px] items-center justify-center rounded-full border-2 border-alpha bg-alpha/15">
+                    <View className="h-[88px] w-[88px] items-center justify-center rounded-full bg-alpha/15">
                       <Text className="text-2xl font-bold text-alpha">
                         {initials}
                       </Text>

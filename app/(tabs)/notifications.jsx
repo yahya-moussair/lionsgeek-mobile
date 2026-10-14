@@ -665,7 +665,7 @@ export default function NotificationsScreen() {
                             {getAvatar(notification) ? (
                               <Image
                                 source={{ uri: getAvatar(notification) }}
-                                className="w-14 h-14 rounded-full border-2 border-alpha/50"
+                                className="w-14 h-14 rounded-full"
                                 placeholder={require('@/assets/images/icon.png')}
                                 contentFit="cover"
                                 transition={200}
@@ -674,9 +674,9 @@ export default function NotificationsScreen() {
                               />
                             ) : (
                               <View
-                                className={`w-14 h-14 rounded-full items-center justify-center border-2 ${notification.type === 'announcement'
-                                  ? 'bg-alpha/20 dark:bg-alpha/30 border-alpha/40'
-                                  : 'bg-beta/20 dark:bg-beta/40 border-beta/30'
+                                className={`w-14 h-14 rounded-full items-center justify-center ${notification.type === 'announcement'
+                                  ? 'bg-alpha/20 dark:bg-alpha/30'
+                                  : 'bg-beta/20 dark:bg-beta/40'
                                   }`}
                               >
                                 <Ionicons

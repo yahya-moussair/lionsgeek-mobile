@@ -407,7 +407,7 @@ export default function CreatePost({ onPostPress, onPostCreated }) {
                 return profileImageUrl ? (
                   <Image
                     source={{ uri: profileImageUrl }}
-                    className="w-12 h-12 rounded-full mr-3 border-2 border-alpha/30"
+                    className="w-12 h-12 rounded-full mr-3"
                     defaultSource={require('@/assets/images/icon.png')}
                   />
                 ) : (
