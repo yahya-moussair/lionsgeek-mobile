@@ -754,8 +754,8 @@ export default function ProfileScreen() {
                 onSaved={(saved) => {
                     setProfile((prev) => {
                         if (!prev) return prev;
-                        const current = Array.isArray(prev.education) ? prev.education : (Array.isArray(prev.educations) ? prev.educations : []);
-                        return { ...prev, education: [saved, ...current] };
+                        const current = Array.isArray(prev.educations) ? prev.educations : [];
+                        return { ...prev, educations: [saved, ...current] };
                     });
                 }}
                 onDeleted={() => { }}

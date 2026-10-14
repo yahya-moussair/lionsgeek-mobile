@@ -449,7 +449,41 @@ export default function ProfileScrollBody(props) {
             }}
           />
 
-          <EducationCard profile={profile} isDark={isDark} />
+          <EducationCard
+            profile={profile}
+            isDark={isDark}
+            isOwnProfile={isOwnProfile}
+            token={token}
+            onEducationAdded={(edu) => {
+              setProfile((prev) => {
+                if (!prev) return prev;
+                const current = Array.isArray(prev.educations) ? prev.educations : [];
+                return { ...prev, educations: [edu, ...current] };
+              });
+            }}
+            onEducationUpdated={(updated) => {
+              setProfile((prev) => {
+                if (!prev) return prev;
+                const current = Array.isArray(prev.educations) ? prev.educations : [];
+                return {
+                  ...prev,
+                  educations: current.map((e) =>
+                    String(e.id) === String(updated.id) ? { ...e, ...updated } : e
+                  ),
+                };
+              });
+            }}
+            onEducationDeleted={(id) => {
+              setProfile((prev) => {
+                if (!prev) return prev;
+                const current = Array.isArray(prev.educations) ? prev.educations : [];
+                return {
+                  ...prev,
+                  educations: current.filter((e) => String(e.id) !== String(id)),
+                };
+              });
+            }}
+          />
         </View>
       )}
 
