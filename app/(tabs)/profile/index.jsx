@@ -198,26 +198,18 @@ export default function ProfileScreen() {
 
         setRepostsLoading(true);
         try {
-            const repostCandidates = [
-                `mobile/profile/${profileId}/reposts`,
-                `mobile/users/${profileId}/reposts`,
-                `mobile/posts/reposts?user_id=${profileId}`,
-                `mobile/posts/reposts?userId=${profileId}`,
-            ];
-
-            let list = await tryFetchFirstList({ token, endpoints: repostCandidates });
-
-            // Fallback: if API doesn't have repost endpoints, extract repost entries from general feed.
-            if (!Array.isArray(list) || list.length === 0) {
-                const res = await API.getWithAuth('mobile/feed', token);
-                const feedList = Array.isArray(res?.data?.feed ?? res?.data?.posts)
-                    ? (res?.data?.feed ?? res?.data?.posts)
-                    : [];
-
-                list = feedList.filter((post) => {
-                    const pid = post?.user?.id ?? post?.author?.id ?? post?.user_id ?? post?.userId;
-                    return pid != null && Number(pid) === Number(profileId) && isRepostPost(post);
-                });
+            const list = [];
+            let offset = 0;
+            for (let page = 0; page < 50; page += 1) {
+                const res = await API.getWithAuth(
+                    `mobile/profile/${profileId}/reposts?offset=${offset}&limit=20`,
+                    token,
+                );
+                const batch = Array.isArray(res?.data?.reposts) ? res.data.reposts : [];
+                list.push(...batch);
+                const next = res?.data?.next_offset;
+                if (next == null || batch.length === 0) break;
+                offset = Number(next);
             }
 
             const getRepostSource = (post) => {
