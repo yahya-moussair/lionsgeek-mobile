@@ -40,7 +40,6 @@ import FollowListModal from './partials/FollowListModal';
 import {
     getLastExperience,
     normalizeSocialLinks,
-    tryFetchFirstList,
 } from '@/utils/profileHelpers';
 import { isRepostPost } from './partials/RepostsGridTab';
 
@@ -130,29 +129,21 @@ export default function ProfileScreen() {
 
         setPostsLoading(true);
         try {
-            // Prefer backend endpoints that return a user's posts directly.
-            // Fallback to filtering `mobile/feed` only if needed.
-            const directCandidates = [
-                `mobile/profile/${profileId}/posts`,
-                `mobile/users/${profileId}/posts`,
-                `mobile/posts/user/${profileId}`,
-                `mobile/posts?user_id=${profileId}`,
-                `mobile/posts?userId=${profileId}`,
-            ];
-
-            let list = await tryFetchFirstList({ token, endpoints: directCandidates });
-            if (!Array.isArray(list) || list.length === 0) {
-                const res = await API.getWithAuth('mobile/feed', token);
-                list = Array.isArray(res?.data?.feed ?? res?.data?.posts)
-                    ? (res?.data?.feed ?? res?.data?.posts)
-                    : [];
+            const list = [];
+            let offset = 0;
+            for (let page = 0; page < 50; page += 1) {
+                const res = await API.getWithAuth(
+                    `mobile/profile/${profileId}/posts?offset=${offset}&limit=20`,
+                    token,
+                );
+                const batch = Array.isArray(res?.data?.posts) ? res.data.posts : [];
+                list.push(...batch);
+                const next = res?.data?.next_offset;
+                if (next == null || batch.length === 0) break;
+                offset = Number(next);
             }
 
             const normalized = list
-                .filter((post) => {
-                    const pid = post?.user?.id ?? post?.author?.id ?? post?.user_id ?? post?.userId;
-                    return pid != null && Number(pid) === Number(profileId);
-                })
                 .map((post) => {
                     const body =
                         post?.body ??
