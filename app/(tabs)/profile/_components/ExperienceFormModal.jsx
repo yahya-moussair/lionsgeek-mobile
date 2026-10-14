@@ -6,7 +6,6 @@ import {
   ScrollView,
   TextInput,
   TouchableOpacity,
-  Pressable,
   KeyboardAvoidingView,
   Platform,
   ActivityIndicator,
@@ -568,7 +567,8 @@ export default function ExperienceFormModal({
         </View>
 
         <ScrollView
-          contentContainerStyle={{ padding: 16, paddingBottom: insets.bottom + 40 }}
+          style={{ flex: 1, width: '100%' }}
+          contentContainerStyle={{ width: '100%', alignItems: 'stretch', padding: 16, paddingBottom: insets.bottom + 40 }}
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
         >
@@ -711,36 +711,41 @@ export default function ExperienceFormModal({
           </InputCard>
 
           {/* ── Save button ── */}
-          <Pressable
+          <TouchableOpacity
             onPress={handleSave}
             disabled={saving}
-            style={({ pressed }) => ({
-              backgroundColor: '#ffc801',
-              borderRadius: 16,
-              paddingVertical: 15,
-              alignItems: 'center',
-              flexDirection: 'row',
-              justifyContent: 'center',
-              marginTop: 8,
-              opacity: pressed || saving ? 0.75 : 1,
-              shadowColor: '#ffc801',
-              shadowOffset: { width: 0, height: 4 },
-              shadowOpacity: 0.4,
-              shadowRadius: 12,
-              elevation: 6,
-            })}
+            activeOpacity={0.8}
+            style={{ width: '100%', alignSelf: 'stretch', marginTop: 8, opacity: saving ? 0.75 : 1 }}
           >
-            {saving ? (
-              <ActivityIndicator size="small" color="#212529" />
-            ) : (
-              <>
-                <Ionicons name="checkmark-circle" size={20} color="#212529" style={{ marginRight: 8 }} />
-                <Text style={{ fontSize: 15, fontWeight: '800', color: '#212529' }}>
+            <View
+              className={`w-full items-center justify-center rounded-2xl py-4 ${isDark ? 'bg-alpha' : 'bg-beta'}`}
+              style={{
+                width: '100%',
+                backgroundColor: isDark ? '#ffc801' : '#212529',
+                borderRadius: 16,
+                paddingVertical: 16,
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              {saving ? (
+                <ActivityIndicator size="small" color={isDark ? '#000000' : '#ffffff'} />
+              ) : (
+                <Text
+                  className={`w-full text-center text-base font-extrabold ${isDark ? 'text-black' : 'text-white'}`}
+                  style={{
+                    width: '100%',
+                    textAlign: 'center',
+                    fontSize: 16,
+                    fontWeight: '800',
+                    color: isDark ? '#000000' : '#ffffff',
+                  }}
+                >
                   {isEditMode ? 'Save Changes' : 'Add Experience'}
                 </Text>
-              </>
-            )}
-          </Pressable>
+              )}
+            </View>
+          </TouchableOpacity>
         </ScrollView>
       </KeyboardAvoidingView>
     </Modal>
