@@ -477,6 +477,31 @@ export default function FeedItem({ item, onPress, initialFocusCommentId = null, 
 
   const screenWidth = Dimensions.get('window').width;
   const displayName = sourcePost?.user?.name || item.user?.name || 'Unknown';
+
+  // Who reposted this entry (name + avatar) for the repost banner.
+  const reposter = (() => {
+    const explicit =
+      item?.reposted_by_user ??
+      (item?.reposted_by && typeof item.reposted_by === 'object' ? item.reposted_by : null);
+    if (explicit?.name) {
+      return { name: explicit.name, avatar: resolveAvatarUrl(explicit.avatar || explicit.image) };
+    }
+    // Backend repost entries: `user` is the reposter, `repost_of` is the original post.
+    if (item?.type === 'repost' && item?.repost_of && item?.user?.name) {
+      return { name: item.user.name, avatar: resolveAvatarUrl(item.user.avatar || item.user.image) };
+    }
+    if (typeof item?.reposted_by === 'string' && item.reposted_by.trim()) {
+      const isMe = !!user?.name && item.reposted_by === user.name;
+      return {
+        name: item.reposted_by,
+        avatar: isMe ? resolveAvatarUrl(user?.avatar || user?.image) : null,
+      };
+    }
+    if (repostedByMe) {
+      return { name: user?.name || 'You', avatar: resolveAvatarUrl(user?.avatar || user?.image) };
+    }
+    return { name: 'Someone', avatar: null };
+  })();
   const caption = sourcePost?.description || sourcePost?.content || item.description || item.content || '';
   const isOwner = (user?.id && sourcePost?.user?.id) ? Number(user.id) === Number(sourcePost.user.id) : false;
   const profileUserId =
@@ -859,8 +884,34 @@ export default function FeedItem({ item, onPress, initialFocusCommentId = null, 
       {(isRepostEntry || repostedByMe) ? (
         <View className="flex-row items-center px-4 pt-3 pb-1">
           <Ionicons name="repeat" size={14} color={mutedColor} />
-          <Text style={{ color: mutedColor }} className="text-xs ml-1 font-semibold">
-            {item.reposted_by || (repostedByMe ? (user?.name || 'You') : 'Someone')} reposted
+          <View
+            style={{
+              width: 20,
+              height: 20,
+              borderRadius: 10,
+              overflow: 'hidden',
+              marginLeft: 6,
+              alignItems: 'center',
+              justifyContent: 'center',
+              borderWidth: 0.5,
+              borderColor: isDark ? '#2e2e2e' : '#ddd8d0',
+            }}
+            className="bg-beta/10 dark:bg-beta/40"
+          >
+            {reposter.avatar ? (
+              <Image
+                source={{ uri: reposter.avatar }}
+                defaultSource={require('@/assets/images/icon.png')}
+                style={{ width: '100%', height: '100%' }}
+              />
+            ) : (
+              <Text style={{ fontSize: 10, fontWeight: '800', color: mutedColor }}>
+                {reposter.name.charAt(0).toUpperCase()}
+              </Text>
+            )}
+          </View>
+          <Text style={{ color: mutedColor }} className="text-xs ml-1.5 font-semibold" numberOfLines={1}>
+            <Text style={{ fontWeight: '800' }}>{reposter.name}</Text> reposted
           </Text>
         </View>
       ) : null}

@@ -284,6 +284,10 @@ export default function ProfileScreen() {
 
                     const resolvedImages = resolveImages(source?.images);
                     const mediaUrl = resolvedImages?.[0] ?? resolvePostMediaUrl(source);
+                    // On a repost entry, `post.user` is the person who reposted.
+                    const reposterAvatar = resolveAvatarUrl(
+                        post?.user?.avatar || post?.user?.image || post?.author?.avatar || post?.author?.image
+                    );
                     const repostedBy =
                         post?.user?.name ||
                         post?.author?.name ||
@@ -370,6 +374,11 @@ export default function ProfileScreen() {
                         // Repost banner
                         reposted: true,
                         reposted_by: post?.reposted_by || post?.repostedBy || repostedBy,
+                        reposted_by_user: {
+                            id: post?.user?.id ?? post?.author?.id ?? post?.user_id ?? post?.userId ?? null,
+                            name: post?.reposted_by || post?.repostedBy || repostedBy,
+                            avatar: reposterAvatar,
+                        },
 
                         // Preserve original source object for share payloads / future features
                         repost_of: source,
