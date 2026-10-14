@@ -418,7 +418,7 @@ export default function More() {
             onPress={() => router.push("/(tabs)/call-history")}
             right={chevron}
           />
-          <RowDivider />
+          {/* <RowDivider />
           <SettingRow
             icon="albums-outline"
             label="Story archive"
@@ -433,7 +433,7 @@ export default function More() {
             sublabel="Who can see your close-friends stories"
             onPress={() => router.push("/(tabs)/settings/close-friends")}
             right={chevron}
-          />
+          /> */}
         </SettingsCard>
 
         {/* Growth & recognition */}

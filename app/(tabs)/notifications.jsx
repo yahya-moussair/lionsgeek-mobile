@@ -472,17 +472,17 @@ export default function NotificationsScreen() {
         router.push('/(tabs)/reservations');
         return;
       }
-      if (targetLink.startsWith('/stories/')) {
-        const query = targetLink.includes('startUserId=') ? targetLink.split('startUserId=')[1] : '';
-        const startUserId = (query || '').split('&')[0];
-        router.push({
-          pathname: '/(tabs)/stories/viewer',
-          params: startUserId
-            ? { startUserId: String(startUserId), openId: String(Date.now()) }
-            : { openId: String(Date.now()) },
-        });
-        return;
-      }
+      // if (targetLink.startsWith('/stories/')) {
+      //   const query = targetLink.includes('startUserId=') ? targetLink.split('startUserId=')[1] : '';
+      //   const startUserId = (query || '').split('&')[0];
+      //   router.push({
+      //     pathname: '/(tabs)/stories/viewer',
+      //     params: startUserId
+      //       ? { startUserId: String(startUserId), openId: String(Date.now()) }
+      //       : { openId: String(Date.now()) },
+      //   });
+      //   return;
+      // }
       if (targetLink.startsWith('/posts/')) {
         router.push(`/(tabs)${targetLink}`);
         return;
@@ -535,8 +535,8 @@ export default function NotificationsScreen() {
       }
     } else if (notification.type === 'post_interaction' || notification.type === 'follow') {
       router.push('/(tabs)/home');
-    } else if (notification.type === 'story_mention') {
-      router.push('/(tabs)/home');
+    // } else if (notification.type === 'story_mention') {
+    //   router.push('/(tabs)/home');
     } else if (notification.type === 'post_report' && notification?.post_id) {
       router.push(`/(tabs)/posts/${notification.post_id}${notification.report_id ? `?reportId=${notification.report_id}` : ''}`);
     } else if (notification.type === 'event' && notification?.event_id) {
