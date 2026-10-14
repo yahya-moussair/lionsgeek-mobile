@@ -1105,16 +1105,18 @@ export default function FeedItem({ item, onPress, initialFocusCommentId = null, 
               )}
             </TouchableOpacity>
 
-            <TouchableOpacity
-              onPress={() => setShowSendPost(true)}
-              className="active:opacity-60"
-            >
-              <Ionicons
-                name="paper-plane-outline"
-                size={24}
-                color={iconColor}
-              />
-            </TouchableOpacity>
+            {false && (
+              <TouchableOpacity
+                onPress={() => setShowSendPost(true)}
+                className="active:opacity-60"
+              >
+                <Ionicons
+                  name="paper-plane-outline"
+                  size={24}
+                  color={iconColor}
+                />
+              </TouchableOpacity>
+            )}
           </View>
 
           <TouchableOpacity onPress={handleToggleSave} className="active:opacity-60">

@@ -306,13 +306,15 @@ export default function ProfileScrollBody(props) {
                 {isFollowing ? 'Following' : 'Follow'}
               </Text>
             </Pressable>
-            <Pressable
-              onPress={onMessagePress}
-              className="flex-1 rounded-xl py-2.5 border border-black/15 dark:border-white/15 items-center flex-row justify-center active:opacity-70"
-            >
-              <Ionicons name="mail-outline" size={17} color={isDark ? '#fff' : '#000'} />
-              <Text className="ml-1.5 text-sm font-semibold text-black dark:text-white">Message</Text>
-            </Pressable>
+            {false && (
+              <Pressable
+                onPress={onMessagePress}
+                className="flex-1 rounded-xl py-2.5 border border-black/15 dark:border-white/15 items-center flex-row justify-center active:opacity-70"
+              >
+                <Ionicons name="mail-outline" size={17} color={isDark ? '#fff' : '#000'} />
+                <Text className="ml-1.5 text-sm font-semibold text-black dark:text-white">Message</Text>
+              </Pressable>
+            )}
             <Pressable
               onPress={onOpenOptions}
               className="px-4 py-2.5 rounded-xl border border-black/15 dark:border-white/15 items-center justify-center active:opacity-70"

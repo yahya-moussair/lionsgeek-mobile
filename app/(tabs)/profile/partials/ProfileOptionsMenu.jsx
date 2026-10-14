@@ -144,25 +144,27 @@ export default function ProfileOptionsMenu({
               Profile options
             </Text>
 
-            <Pressable
-              onPress={handleMessage}
-              className="flex-row items-center gap-3 px-3 py-3 rounded-xl bg-black/[0.02] dark:bg-white/[0.04]"
-            >
-              <View className="w-9 h-9 rounded-xl bg-alpha/15 items-center justify-center">
-                <Ionicons name="mail-outline" size={18} color="#ffc801" />
-              </View>
-              <View className="flex-1">
-                <Text className="text-sm font-semibold text-black dark:text-white">Message</Text>
-                <Text className="text-xs text-black/45 dark:text-white/45 mt-0.5">
-                  Open a chat with {profile?.name || 'this member'}
-                </Text>
-              </View>
-              <Ionicons
-                name="chevron-forward"
-                size={18}
-                color={isDark ? 'rgba(255,255,255,0.35)' : 'rgba(0,0,0,0.35)'}
-              />
-            </Pressable>
+            {false && (
+              <Pressable
+                onPress={handleMessage}
+                className="flex-row items-center gap-3 px-3 py-3 rounded-xl bg-black/[0.02] dark:bg-white/[0.04]"
+              >
+                <View className="w-9 h-9 rounded-xl bg-alpha/15 items-center justify-center">
+                  <Ionicons name="mail-outline" size={18} color="#ffc801" />
+                </View>
+                <View className="flex-1">
+                  <Text className="text-sm font-semibold text-black dark:text-white">Message</Text>
+                  <Text className="text-xs text-black/45 dark:text-white/45 mt-0.5">
+                    Open a chat with {profile?.name || 'this member'}
+                  </Text>
+                </View>
+                <Ionicons
+                  name="chevron-forward"
+                  size={18}
+                  color={isDark ? 'rgba(255,255,255,0.35)' : 'rgba(0,0,0,0.35)'}
+                />
+              </Pressable>
+            )}
 
             <Pressable
               onPress={() => handleCall('audio')}
