@@ -506,8 +506,8 @@ export default function ProfileScreen() {
                 setProfile((prev) => (prev ? { ...prev, cover: nextCover } : prev));
             }
         } catch (err) {
-            console.error('[PROFILE] cover upload error:', err);
-            Alert.alert('Error', 'Could not update cover. Please try again.');
+            const firstError = Object.values(err?.response?.data?.errors ?? {})?.[0]?.[0];
+            Alert.alert('Error', firstError || err?.response?.data?.message || 'Could not update cover. Please try again.');
         } finally {
             setCoverUploading(false);
         }
