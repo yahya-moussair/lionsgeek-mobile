@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import EducationFormModal from '../_components/EducationFormModal';
+import useDeleteProfileEntry from '../_components/useDeleteProfileEntry';
+import EntryActionsMenu from '../_components/EntryActionsMenu';
 import { formatPeriod, formatPeriodFromParts } from '@/utils/profileHelpers';
 
 export default function EducationCard({
@@ -26,6 +28,12 @@ export default function EducationCard({
   const openAdd = () => setFormModal({ visible: true, education: null });
   const openEdit = (edu) => setFormModal({ visible: true, education: edu });
   const closeForm = () => setFormModal({ visible: false, education: null });
+
+  const { deletingId, confirmDelete } = useDeleteProfileEntry({
+    kind: 'education',
+    token,
+    onDeleted: (id) => onEducationDeleted?.(id),
+  });
 
   return (
     <>
@@ -115,20 +123,15 @@ export default function EducationCard({
                       <Text className="text-sm font-bold text-black dark:text-white flex-1 leading-snug">
                         {institution}
                       </Text>
-                      {/* Edit button — own profile only */}
+                      {/* Edit / delete menu — own profile only */}
                       {isOwnProfile && (
-                        <TouchableOpacity
-                          onPress={() => openEdit(edu)}
-                          hitSlop={10}
-                          activeOpacity={0.7}
-                          className="w-6 h-6 rounded-full bg-black/[0.05] dark:bg-white/[0.08] items-center justify-center shrink-0"
-                        >
-                          <Ionicons
-                            name="pencil"
-                            size={11}
-                            color={isDark ? 'rgba(255,255,255,0.55)' : 'rgba(0,0,0,0.45)'}
-                          />
-                        </TouchableOpacity>
+                        <EntryActionsMenu
+                          isDark={isDark}
+                          title={institution}
+                          onEdit={() => openEdit(edu)}
+                          onDelete={() => confirmDelete(edu)}
+                          deleting={deletingId != null && String(deletingId) === String(edu?.id)}
+                        />
                       )}
                     </View>
                     {degree || field ? (

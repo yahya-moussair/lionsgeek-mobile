@@ -15,6 +15,7 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import API from '@/api';
+import useDeleteProfileEntry from './useDeleteProfileEntry';
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -293,7 +294,6 @@ export default function ExperienceFormModal({
   const [description, setDescription]   = useState('');
 
   const [saving, setSaving]             = useState(false);
-  const [deleting, setDeleting]         = useState(false);
 
   // Populate form when editing
   useEffect(() => {
@@ -498,60 +498,15 @@ export default function ExperienceFormModal({
     }
   };
 
-  // ── Delete ──
-  const handleDelete = () => {
-    Alert.alert(
-      'Delete Experience',
-      'Are you sure you want to remove this experience?',
-      [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'Delete',
-          style: 'destructive',
-          onPress: async () => {
-            setDeleting(true);
-            try {
-              const deleteEndpoints = [
-                `mobile/profile/experiences/${experience.id}`,
-                `mobile/profile/experience/${experience.id}`,
-                `mobile/experiences/${experience.id}`,
-                `mobile/experience/${experience.id}`,
-              ];
-
-              let lastError = null;
-              for (const endpoint of deleteEndpoints) {
-                try {
-                  await API.remove(endpoint, token);
-                  lastError = null;
-                  break;
-                } catch (err) {
-                  lastError = err;
-                  if (err?.response?.status !== 404) break;
-                }
-              }
-              if (lastError) throw lastError;
-
-              onDeleted?.(experience.id);
-              onClose();
-            } catch (err) {
-              console.error('[EXPERIENCE_FORM] delete error:', err);
-              const status = err?.response?.status;
-              if (status === 404) {
-                Alert.alert(
-                  'API route not found (404)',
-                  'The app could not find the Experience delete endpoint on the server. Please check your backend routes for the mobile experience delete endpoint.'
-                );
-              } else {
-                Alert.alert('Error', 'Could not delete experience. Please try again.');
-              }
-            } finally {
-              setDeleting(false);
-            }
-          },
-        },
-      ],
-    );
-  };
+  const { deleting, confirmDelete } = useDeleteProfileEntry({
+    kind: 'experience',
+    token,
+    onDeleted: (id) => {
+      onDeleted?.(id);
+      onClose();
+    },
+  });
+  const handleDelete = () => confirmDelete(experience);
 
   const bg = isDark ? '#171717' : '#f4f4f5';
 

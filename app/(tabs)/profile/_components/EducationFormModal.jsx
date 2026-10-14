@@ -15,6 +15,7 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import API from '@/api';
+import useDeleteProfileEntry from './useDeleteProfileEntry';
 
 const MONTHS = [
   { value: 1, label: 'Jan' },
@@ -232,7 +233,6 @@ export default function EducationFormModal({
   const [description, setDescription] = useState('');
 
   const [saving, setSaving] = useState(false);
-  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
     if (visible && isEditMode) {
@@ -356,39 +356,15 @@ export default function EducationFormModal({
     }
   };
 
-  const handleDelete = () => {
-    Alert.alert(
-      'Delete Education',
-      'Are you sure you want to remove this education entry?',
-      [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'Delete',
-          style: 'destructive',
-          onPress: async () => {
-            setDeleting(true);
-            try {
-              await API.remove(`mobile/profile/education/${education.id}`, token);
-
-              onDeleted?.(education.id);
-              onClose();
-            } catch (err) {
-              const status = err?.response?.status;
-              if (status === 403) {
-                Alert.alert('Not allowed', 'You can only delete your own education.');
-              } else if (status === 404) {
-                Alert.alert('Not found', 'This education entry no longer exists.');
-              } else {
-                Alert.alert('Error', 'Could not delete education. Please try again.');
-              }
-            } finally {
-              setDeleting(false);
-            }
-          },
-        },
-      ],
-    );
-  };
+  const { deleting, confirmDelete } = useDeleteProfileEntry({
+    kind: 'education',
+    token,
+    onDeleted: (id) => {
+      onDeleted?.(id);
+      onClose();
+    },
+  });
+  const handleDelete = () => confirmDelete(education);
 
   const bg = isDark ? '#171717' : '#f4f4f5';
 
